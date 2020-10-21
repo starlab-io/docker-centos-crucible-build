@@ -43,7 +43,7 @@ RUN git clone --depth 1 --branch v5.1.0 git://git.qemu-project.org/qemu.git && \
 RUN pip install behave==1.2.6 pyhamcrest==1.10.1
 
 # Install python3 dependencies
-RUN pip3 install transient==0.9
+RUN pip3 install transient==0.10
 
 ENV LC_ALL=en_US.utf-8
 ENV LANG=en_US.utf-8
