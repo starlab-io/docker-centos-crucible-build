@@ -45,5 +45,25 @@ RUN pip install behave==1.2.6 pyhamcrest==1.10.1
 # Install python3 dependencies
 RUN pip3 install transient==0.10
 
+# Allow any user to have sudo access within the container
+ARG VER=1
+ARG ZIP_FILE=add-user-to-sudoers.zip
+RUN wget -nv "https://github.com/starlab-io/add-user-to-sudoers/releases/download/${VER}/${ZIP_FILE}" && \
+    unzip "${ZIP_FILE}" && \
+    rm "${ZIP_FILE}" && \
+    mkdir -p /usr/local/bin && \
+    mv add_user_to_sudoers /usr/local/bin/ && \
+    mv startup_script /usr/local/bin/ && \
+    chmod 4755 /usr/local/bin/add_user_to_sudoers && \
+    chmod +x /usr/local/bin/startup_script && \
+    # Let regular users be able to use sudo
+    echo $'auth       sufficient    pam_permit.so\n\
+account    sufficient    pam_permit.so\n\
+session    sufficient    pam_permit.so\n\
+' > /etc/pam.d/sudo
+
 ENV LC_ALL=en_US.utf-8
 ENV LANG=en_US.utf-8
+
+ENTRYPOINT ["/usr/local/bin/startup_script"]
+CMD ["/bin/bash", "-l"]
