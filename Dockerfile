@@ -19,6 +19,9 @@ RUN yum update -y && yum install -y \
     # Crucible build dependencies \
     squashfs-tools \
     \
+    # Dependencies for starting build as non-root user \
+    sudo \
+    \
     && yum clean all && \
     rm -rf /var/cache/yum/* /tmp/* /var/tmp/*
 
