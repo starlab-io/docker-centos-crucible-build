@@ -22,6 +22,9 @@ RUN yum update -y && yum install -y \
     # Dependencies for starting build as non-root user \
     sudo \
     \
+    # Dependiences for Transient shared folder support
+    openssh-server \
+    \
     && yum clean all && \
     rm -rf /var/cache/yum/* /tmp/* /var/tmp/*
 
@@ -46,7 +49,7 @@ RUN git clone --depth 1 --branch v5.1.0 git://git.qemu-project.org/qemu.git && \
 RUN pip install behave==1.2.6 pyhamcrest==1.10.1
 
 # Install python3 dependencies
-RUN pip3 install transient==0.13
+RUN pip3 install transient==0.15
 
 # Allow any user to have sudo access within the container
 ARG VER=1
