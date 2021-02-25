@@ -3,8 +3,17 @@ FROM starlabio/centos-base:3
 LABEL maintainer="Adam Schwalm <adam.schwalm@starlab.io>"
 
 # Install yum-plugin-ovl to work around issue with a bad
-# rpmdb checksum
-RUN yum install -y epel-release yum-plugin-ovl
+# rpmdb checksum, as well as a few other things that must
+# be installed prior to the general install step below
+RUN yum install -y \
+    # Add the EPEL for python3 and other new packages \
+    epel-release \
+    # Add the overlay plugin \
+    yum-plugin-ovl \
+    # Add endpoint for the updated git version (needed for titanium) \
+    https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm \
+    && yum clean all && \
+    rm -rf /var/cache/yum/* /tmp/* /var/tmp/*
 
 RUN yum update -y && yum install -y \
     \
@@ -22,9 +31,11 @@ RUN yum update -y && yum install -y \
     # Dependencies for starting build as non-root user \
     sudo \
     \
-    # Dependiences for Transient shared folder support
+    # Dependiences for Transient shared folder support \
     openssh-server \
     \
+    # Dependiences for building Titanium libfortifs \
+    prelink \
     && yum clean all && \
     rm -rf /var/cache/yum/* /tmp/* /var/tmp/*
 
