@@ -62,6 +62,13 @@ RUN pip install behave==1.2.6 pyhamcrest==1.10.1
 # Install python3 dependencies
 RUN pip3 install transient==0.15
 
+# Install binary for reformating Gherkin feature files. 
+# There is a python tool for this, similar to black, however we can only use old version of it due to our python version. 
+# Those old versions crash on one of our feature files.
+RUN wget https://github.com/antham/ghokin/releases/download/v1.6.1/ghokin_linux_amd64 && \
+    chmod +x ghokin_linux_amd64 && \
+    mv ghokin_linux_amd64 /usr/bin/ghokin
+
 # Allow any user to have sudo access within the container
 ARG VER=1
 ARG ZIP_FILE=add-user-to-sudoers.zip
