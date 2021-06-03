@@ -8,6 +8,8 @@ LABEL maintainer="Adam Schwalm <adam.schwalm@starlab.io>"
 RUN yum install -y \
     # Add the EPEL for python3 and other new packages \
     epel-release \
+    # Add software collections \
+    centos-release-scl \
     # Add the overlay plugin \
     yum-plugin-ovl \
     # Add endpoint for the updated git version (needed for titanium) \
@@ -26,7 +28,7 @@ RUN yum update -y && yum install -y \
     git libfdt-devel zlib-devel \
     \
     # Crucible build dependencies \
-    squashfs-tools \
+    squashfs-tools llvm-toolset-7 \
     \
     # Dependencies for starting build as non-root user \
     sudo \
