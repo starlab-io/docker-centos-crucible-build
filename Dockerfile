@@ -38,6 +38,8 @@ RUN yum update -y && yum install -y \
     \
     # Dependiences for building Titanium libfortifs \
     prelink \
+    # Dependiences for making collect usb/iso
+    syslinux genisoimage libisof \
     && yum clean all && \
     rm -rf /var/cache/yum/* /tmp/* /var/tmp/*
 
