@@ -38,6 +38,10 @@ RUN yum update -y && yum install -y \
     \
     # Dependiences for building Titanium libfortifs \
     prelink \
+    # Needed for generating a html report which shows combined test coverage. 
+    # Provides the genhtml command which may conflict with same-name commands in 
+    # texlive. Should only be an issue if we start using texlive for docs.
+    lcov \
     && yum clean all && \
     rm -rf /var/cache/yum/* /tmp/* /var/tmp/*
 
@@ -50,7 +54,9 @@ RUN curl https://sh.rustup.rs -sSf > rustup-install.sh && \
     rm rustup-install.sh && \
                             \
     # Install rustfmt / cargo fmt for testing
-    rustup component add rustfmt clippy
+    rustup component add rustfmt clippy && \
+    # Install grcov for code coverage
+    cargo install grcov
 
 # Build and install qemu
 RUN git clone --depth 1 --branch v5.1.0 git://git.qemu-project.org/qemu.git && \
@@ -93,3 +99,4 @@ ENV LANG=en_US.utf-8
 
 ENTRYPOINT ["/usr/local/bin/startup_script"]
 CMD ["/bin/bash", "-l"]
+
