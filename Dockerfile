@@ -22,7 +22,8 @@ RUN yum update -y && yum install -y \
     # Dependencies for building xen \
     checkpolicy gcc python3 python3-devel iasl ncurses-devel libuuid-devel glib2-devel \
     pixman-devel selinux-policy-devel yajl-devel systemd-devel \
-    glibc-devel.i686 glibc-devel \
+    glibc-devel.i686 glibc-devel ocaml ocaml-compiler-libs ocaml-runtime ocaml-findlib \
+    ninja-build centos-release-scl-rh devtoolset-8-toolchain \
     \
     # Dependencies for building qemu \
     git libfdt-devel zlib-devel \
@@ -53,7 +54,7 @@ RUN curl https://sh.rustup.rs -sSf > rustup-install.sh && \
     rustup component add rustfmt clippy
 
 # Build and install qemu
-RUN git clone --depth 1 --branch v5.1.0 git://git.qemu-project.org/qemu.git && \
+RUN git clone --depth 1 --branch v6.0.0 https://gitlab.com/qemu-project/qemu.git && \
     cd qemu && \
     ./configure --target-list=x86_64-softmmu && \
     make -j4 && make install
@@ -87,6 +88,10 @@ RUN wget -nv "https://github.com/starlab-io/add-user-to-sudoers/releases/downloa
 account    sufficient    pam_permit.so\n\
 session    sufficient    pam_permit.so\n\
 ' > /etc/pam.d/sudo
+
+RUN yum install -y devtoolset-11-toolchain
+RUN echo "/opt/rh" > /etc/scl/conf/gcc-toolset-11
+RUN ln -s /opt/rh/devtoolset-11 /opt/rh/gcc-toolset-11
 
 ENV LC_ALL=en_US.utf-8
 ENV LANG=en_US.utf-8
